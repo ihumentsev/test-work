@@ -4,11 +4,13 @@ import css from '../Layout/Layout.module.css';
 
 export default function Layout() {
   return (
-    <div>
+    <>
       <Header />
-      <div className={css.container}>
-        <Outlet />
-      </div>
-    </div>
+      <main className={css.main_content}>
+        <div className={css.container}>
+          <Outlet />
+        </div>
+      </main>
+    </>
   );
 }

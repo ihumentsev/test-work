@@ -1,37 +1,43 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
-import * as API from 'Services/API';
 import { Link, useLocation } from 'react-router-dom';
 import css from '../Tweets/Tweets.module.css';
 import UserCard from 'components/UserCard/UserCard';
 import Btn from 'components/Btn/Btn';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUsers } from 'redux/operations/users';
+import { getTweets } from 'redux/selectors';
 
 export default function Movies() {
-  const [tweets, setTweets] = useState([]);
   const [following, setFollowing] = useState(true);
   const [currentPage, setCarentPage] = useState(1);
   const location = useLocation();
-  console.log(currentPage);
+  const dispatch = useDispatch();
+  const tweet = useSelector(getTweets);
+
   const handlerFollow = () => {
     setFollowing(!following);
   };
 
-  const LoadMore = () => {
+  const LoadMore = e => {
+    e.preventDefault();
     let page = currentPage;
     page += 1;
     setCarentPage(page);
-    if (tweets.length < 12) {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+    if (tweet.length < 12) {
       alert("We're sorry, but you've reached the end of search results.");
       setCarentPage(1);
     }
   };
 
   useEffect(() => {
-    API.fetchTrendMovies(currentPage).then(res => {
-      console.log(res);
-      setTweets(res);
-    });
-  }, [currentPage]);
+    dispatch(getUsers(currentPage));
+  }, [dispatch, currentPage]);
 
   return (
     <>
@@ -40,14 +46,15 @@ export default function Movies() {
           &#8634; Back
         </Link>
         <ul className={css.list}>
-          {tweets.map(item => (
-            <UserCard
-              key={item.id}
-              item={item}
-              following={following}
-              handlerFollow={handlerFollow}
-            />
-          ))}
+          {tweet &&
+            tweet.map(item => (
+              <UserCard
+                key={item.id}
+                item={item}
+                following={following}
+                handlerFollow={handlerFollow}
+              />
+            ))}
         </ul>
 
         <Btn text="Load more" handler={LoadMore} />
