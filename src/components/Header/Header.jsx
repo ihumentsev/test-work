@@ -12,7 +12,7 @@ export const Header = () => {
           <NavLink end to="/" className={setActiveLink}>
             Home
           </NavLink>
-          <NavLink to="tweets" className={setActiveLink}>
+          <NavLink to="/tweets" className={setActiveLink}>
             Tweets
           </NavLink>
         </nav>
