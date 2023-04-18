@@ -15,6 +15,7 @@ const initialState = {
   data: [],
   isFollowUsers: [],
   status: 'loading',
+  filter: 'all',
 };
 
 const stateUpdate = (state, action) => {
@@ -38,6 +39,9 @@ const usersSlice = createSlice({
         el => el !== action.payload
       );
     },
+    filterUser(state, action) {
+      state.filter = action.payload;
+    },
   },
   extraReducers: builder => {
     builder.addCase(getUsers.pending, pendingHandlerAuth);
@@ -57,6 +61,6 @@ const usersSlice = createSlice({
   },
 });
 
-export const { followUser, deleteFollow } = usersSlice.actions;
+export const { followUser, deleteFollow, filterUser } = usersSlice.actions;
 
 export const usersReducer = usersSlice.reducer;

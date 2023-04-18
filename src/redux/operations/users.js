@@ -17,7 +17,7 @@ export const updateUserById = createAsyncThunk(
       `https://643856604660f26eb19aa37e.mockapi.io/users/${id}`,
       { followers: followers }
     );
-    console.log(data);
+
     return data;
   }
 );

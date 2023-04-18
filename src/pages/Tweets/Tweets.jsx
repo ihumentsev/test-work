@@ -6,18 +6,35 @@ import UserCard from 'components/UserCard/UserCard';
 import Btn from 'components/Btn/Btn';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUsers } from 'redux/operations/users';
-import { getTweets } from 'redux/selectors';
+import { filtering, getTweets, isFollowUsers } from 'redux/selectors';
 
 export default function Movies() {
   const [following, setFollowing] = useState(true);
   const [currentPage, setCarentPage] = useState(1);
+  // const [filteringUser, setFilteringUser] = useState(null)
   const location = useLocation();
   const dispatch = useDispatch();
   const tweet = useSelector(getTweets);
+  const filter = useSelector(filtering);
+  const FollowUsers = useSelector(isFollowUsers);
 
   const handlerFollow = () => {
     setFollowing(!following);
   };
+
+  const filteringUser = filterHandler();
+
+  function filterHandler() {
+    if (tweet && filter === 'all') {
+      return tweet;
+    }
+    if (tweet && filter === 'follow') {
+      return tweet.filter(user => !FollowUsers.includes(user.id));
+    }
+    if (tweet && filter === 'following') {
+      return tweet.filter(user => FollowUsers.includes(user.id));
+    }
+  }
 
   const LoadMore = e => {
     e.preventDefault();
@@ -45,9 +62,10 @@ export default function Movies() {
         <Link to={location.state?.from ?? '/'} className={css.link}>
           &#8634; Back
         </Link>
+
         <ul className={css.list}>
-          {tweet &&
-            tweet.map(item => (
+          {filteringUser &&
+            filteringUser.map(item => (
               <UserCard
                 key={item.id}
                 item={item}
